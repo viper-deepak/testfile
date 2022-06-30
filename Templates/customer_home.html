@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <body>
+		{% if error %}  
+            <p><strong>{{error}}</strong></p>  
+        {% endif %}
+        {% for row in rows %}
+        <p>Welcome {{row[0]}}</p>
+        {% endfor %} 
+        <p> Your Account Details</p>
+        <table border=2>  
+			<tr>
+				<td>Name</td>  
+				<td>Account NO</td> 
+				<td>Account Type</td> 
+				<td>Balance</td>
+			</tr>  
+			{% for row in rows %}  
+				<tr>  
+					<td>{{row[0]}}</td>  
+					<td>{{row[1]}}</td>  
+					<td>{{row[2]}}</td>  
+					<td>{{row[3]}}</td>  
+				</tr>  
+			{% endfor %}  
+		</table>  
+        <br>
+        <a href="/trans">Make Transaction</a>
+		<br><br>
+        <a href="/logout">Logout</a>
+    </body>
+</html>

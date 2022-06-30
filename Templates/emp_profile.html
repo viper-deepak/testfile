@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+    </head>
+    <body>
+        {% for row in rows %}
+        <p>Welcome {{row["name"]}}</p>
+        {% endfor %} 
+        <p> Your Profile details</p>
+        <table border=2>  
+			<tr>  
+				<td>Emp ID</td>  
+				<td>Name</td>  
+				<td>Email</td> 
+				<td>Designation</td> 
+				<td>Dept</td>
+				<td>Address</td>  
+			</tr>  
+			{% for row in rows %}  
+				<tr>  
+					<td>{{row[0]}}</td>  
+					<td>{{row[1]}}</td>  
+					<td>{{row[2]}}</td>  
+					<td>{{row[3]}}</td>  
+					<td>{{row[4]}}</td>  
+					<td>{{row[5]}}</td>  
+				</tr>  
+			{% endfor %}  
+		</table>  
+        <br>
+        <a href="/changepassword">change password</a>
+		<br>
+		<p><a href="/emplogout">logout</a></p>
+    </body>
+</html>

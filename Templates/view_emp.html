@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>View Employee Detail</head>
+    <body>
+        <h3>Employee Information</h3>  
+		<table border=2>  
+			<tr>  
+				<td>Emp ID</td>  
+				<td>Name</td>  
+				<td>Email</td>  
+				<td>dept</td>
+				<td>Address</td>  
+			</tr>  
+			  
+			{% for row in rows %}  
+			  
+				<tr>  
+					<td>{{row["empid"]}}</td>  
+					<td>{{row["name"]}}</td>  
+					<td>{{row["email"]}}</td>  
+					<td>{{row["department"]}}</td>  
+					<td>{{row["address"]}}</td>  
+				</tr>  
+			  
+			{% endfor %}  
+		</table>  
+		<br>
+		<a href="/adminhome">Back to Home</a>
+		<br>
+    </body>
+</html>

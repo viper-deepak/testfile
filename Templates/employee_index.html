@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        {% if error %}  
+            <p><strong>Error</strong>: {{error}}</p>  
+        {% endif %}  
+        <p>Employee Login</p>
+        <form action="/login" method="post">
+            <label>Employee</label>
+            <input type="text" name="empid">
+            <br>
+            <label>Password</label>
+            <input type="password" name="password">
+            <input type="submit" value="login">
+        </form>
+        <br>
+        <a href="/empregister">Register</a>
+        <br>
+        <a href="/">Index</a>
+    </body>
+</html>
