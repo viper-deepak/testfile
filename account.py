@@ -55,7 +55,7 @@ def trans_confirm():
             amount=request.form["amount"]
             ttype=request.form['ttype']
             today=date.today()
-            with pypyodbc.connect(conn) as con: 
+            with pypyodbc.connect(conn) as con:
                 cur = con.cursor()
                 cur.execute("select ano,balance from account where cid='%s'"%cid)
                 acc=cur.fetchone()                
@@ -63,7 +63,7 @@ def trans_confirm():
                 count=cur.fetchone()
                 if ttype=='D':
                     if count and count[0]>=3:
-                        error = "Error : Deposit transaction limit exceed"
+                        error = "Error : Transaction limit exceed for deposit"
                         return render_template('customer_home.html',error=error)
                     elif int(amount)<=100000:
                         check_amount=int(acc[1])+int(amount)
@@ -74,7 +74,7 @@ def trans_confirm():
                         return render_template('customer_home.html',error=error)
                 elif ttype=='W':
                     if count and count[0]>=3:
-                        error = "Error : Deposit transaction limit exceed"
+                        error = "Error : Transaction limit exceed for withdrawl"
                         return render_template('customer_home.html',error=error)
                     elif int(amount)<=10000:
                         if (int(acc[1])-int(amount))>=0 :
@@ -101,7 +101,7 @@ def logout():
 @app.route('/sessionover/<msg>')
 def sessionover(msg):
     return render_template('customer_login.html',msg=msg)
-
+    
             
 if __name__=='__main__':
     app.run(debug='True')
