@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
     <body>
-		{% if error %}  
-            <p><strong>{{error}}</strong></p>  
+		{% if msg %}  
+            <p><strong>{{msg}}</strong></p>  
         {% endif %}
+		<br>
         {% for row in rows %}
-        <p>Welcome {{row[0]}}</p>
+        <p>Hi {{row[0]}}</p>
         {% endfor %} 
         <p> Your Account Details</p>
         <table border=2>  
