@@ -57,10 +57,6 @@ def statement():
         msg="session over, login again"
         return redirect(url_for('sessionover',msg=msg))
 
-@app.route('/error/<msg>')
-def trans_msg(msg):
-    return render_template('customer_trans_msg.html',msg=msg)
-
 @app.route('/trans')
 def trans():
     if 'cus_id' in session:
