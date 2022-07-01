@@ -103,7 +103,7 @@ def trans_confirm():
                         error = "Error : Transaction limit exceed for withdrawl"
                         return render_template('customer_home.html',error=error)
                     elif int(amount)<=10000:
-                        if (int(acc[1])-int(amount))>=0 :
+                        if (int(acc[1])-int(amount))>=0:
                             cur.execute(trans_history,(trans_id,acc[0],ttype,timestamp,amount,status[0],check_amount))
                             cur.execute("insert into trans values(?,?,?,?,?)",(trans_id,acc[0],ttype,timestamp,amount))
                             cur.execute("update account set balance=? where ano=?",(check_amount,acc[0]))
