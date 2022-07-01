@@ -1,6 +1,8 @@
 from flask import *
 import pypyodbc
 from datetime import date
+import datetime
+import uuid
 
 app=Flask(__name__)
 app.secret_key = "a1b2c"
@@ -39,6 +41,21 @@ def home():
         msg="session over, login again"
         return redirect(url_for('sessionover',msg=msg))
 
+@app.route('/statement')
+def statement():
+    if 'cus_id' in session:
+        cid=session['cus_id']
+        with pypyodbc.connect(conn) as con: 
+            cur = con.cursor()
+            cur.execute("select ano from account where cid='%s'"%cid)
+            ano=cur.fetchone()
+            cur.execute("select * from trans_history where ano='%s' order by tdate desc"%ano[0])
+            rows=cur.fetchall()
+        return render_template('customer_statement.html',rows=rows)
+    else:
+        msg="session over, login again"
+        return redirect(url_for('sessionover',msg=msg))
+
 @app.route('/trans')
 def trans():
     if 'cus_id' in session:
@@ -54,37 +71,48 @@ def trans_confirm():
             cid=session['cus_id']
             amount=request.form["amount"]
             ttype=request.form['ttype']
+            timestamp=datetime.datetime.now()
             today=date.today()
+            trans_id=uuid.uuid4().hex[:10]
+            status=['Success','Failed']
             with pypyodbc.connect(conn) as con:
                 cur = con.cursor()
                 cur.execute("select ano,balance from account where cid='%s'"%cid)
                 acc=cur.fetchone()                
-                cur.execute("SELECT count(*) as date from trans where ano=? and CONVERT(DATE,tdate)=? and ttype=? group by CONVERT(DATE,tdate)",(acc[0],today,ttype))
+                cur.execute("SELECT count(*) from trans where ano=? and CONVERT(DATE,tdate)=? and ttype=? group by CONVERT(DATE,tdate)",(acc[0],today,ttype))
                 count=cur.fetchone()
-                if ttype=='D':
+                trans_history="insert into trans_history values(?,?,?,?,?,?,?)"
+                if ttype=='Credit':
+                    check_amount=int(acc[1])+int(amount)
                     if count and count[0]>=3:
+                        cur.execute(trans_history,(trans_id,acc[0],ttype,timestamp,amount,status[1],acc[1]))
                         error = "Error : Transaction limit exceed for deposit"
                         return render_template('customer_home.html',error=error)
                     elif int(amount)<=100000:
-                        check_amount=int(acc[1])+int(amount)
-                        cur.execute("insert into trans values(?,?,CURRENT_TIMESTAMP,?)",(acc[0],ttype,amount))
+                        cur.execute(trans_history,(trans_id,acc[0],ttype,timestamp,amount,status[0],check_amount))
+                        cur.execute("insert into trans values(?,?,?,?,?)",(trans_id,acc[0],ttype,timestamp,amount))
                         cur.execute("update account set balance=? where ano=?",(check_amount,acc[0]))
                     else:
+                        cur.execute(trans_history,(trans_id,acc[0],ttype,timestamp,amount,status[1],acc[1]))
                         error = "Error : Maximum 1,00,000 rupee can be Deposit per transaction, So transaction abort"
                         return render_template('customer_home.html',error=error)
-                elif ttype=='W':
+                elif ttype=='Debit':
+                    check_amount=int(acc[1])-int(amount)
                     if count and count[0]>=3:
+                        cur.execute(trans_history,(trans_id,acc[0],ttype,timestamp,amount,status[1],acc[1]))
                         error = "Error : Transaction limit exceed for withdrawl"
                         return render_template('customer_home.html',error=error)
                     elif int(amount)<=10000:
                         if (int(acc[1])-int(amount))>=0 :
-                            check_amount=int(acc[1])-int(amount)
-                            cur.execute("insert into trans values(?,?,CURRENT_TIMESTAMP,?)",(acc[0],ttype,amount))
+                            cur.execute(trans_history,(trans_id,acc[0],ttype,timestamp,amount,status[0],check_amount))
+                            cur.execute("insert into trans values(?,?,?,?,?)",(trans_id,acc[0],ttype,timestamp,amount))
                             cur.execute("update account set balance=? where ano=?",(check_amount,acc[0]))
                         else:
+                            cur.execute(trans_history,(trans_id,acc[0],ttype,timestamp,amount,status[1],acc[1]))
                             error = "Error : insufficient balance, So transaction abort"
                             return render_template('customer_home.html',error=error) 
                     else:
+                        cur.execute(trans_history,(trans_id,acc[0],ttype,timestamp,amount,status[1],acc[1]))
                         error = "Error : Maximum 10,000 rupee can be widthdraw per transaction, So transaction abort"
                         return render_template('customer_home.html',error=error)   
                 con.commit()

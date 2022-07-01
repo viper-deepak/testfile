@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
     <body>
-		{% if error %}  
-            <p><strong>{{error}}</strong></p>  
-        {% endif %}
-        {% for row in rows %}
-        <p>Welcome {{row[0]}}</p>
-        {% endfor %} 
-        <p> Your Account Details</p>
+        <p> Your Transaction Details</p>
         <table border=2>  
 			<tr>
-				<td>Name</td>  
+				<td>Transaction Id</td>  
 				<td>Account NO</td> 
-				<td>Account Type</td> 
+				<td>Transaction Type</td> 
+                <td>Transaction Date</td> 
+				<td>Transaction Amount</td>
+                <td>Transaction Status</td> 
 				<td>Balance</td>
+
 			</tr>  
 			{% for row in rows %}  
 				<tr>  
@@ -21,13 +19,16 @@
 					<td>{{row[1]}}</td>  
 					<td>{{row[2]}}</td>  
 					<td>{{row[3]}}</td>  
+                    <td>{{row[4]}}</td> 
+                    <td>{{row[5]}}</td>  
+                    <td>{{row[6]}}</td> 
 				</tr>  
 			{% endfor %}  
 		</table>  
-        <br>
+        <br><br>
+        <a href="/home">back</a>
+        <br><br>
         <a href="/trans">Make Transaction</a>
-		<br><br>
-        <a href="/statement">View Statement</a>
 		<br><br>
         <a href="/logout">Logout</a>
     </body>
