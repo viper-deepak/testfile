@@ -1,5 +1,6 @@
 from flask import *
 import pypyodbc
+from forms import TransactionForm
 from datetime import date
 import datetime
 import uuid
@@ -61,7 +62,8 @@ def statement():
 @app.route('/trans')
 def trans():
     if 'cus_id' in session:
-        return render_template('customer_trans.html')
+        form=TransactionForm()
+        return render_template('customer_trans.html',form = form)
     else:
         msg="session over, login again"
         return redirect(url_for('sessionover',msg=msg))
@@ -69,6 +71,7 @@ def trans():
 @app.route('/transconfirm',methods=["POST"])
 def trans_confirm():
     if 'cus_id' in session:
+        
         if request.method=="POST":
             cid=session['cus_id']
             amount=request.form["amount"]
