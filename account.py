@@ -57,7 +57,10 @@ def statement():
         msg="session over, login again"
         return redirect(url_for('sessionover',msg=msg))
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> flask
 @app.route('/trans')
 def trans():
     if 'cus_id' in session:
