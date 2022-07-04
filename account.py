@@ -85,6 +85,7 @@ def trans_confirm():
                 cur.execute("SELECT count(*) from trans where ano=? and CONVERT(DATE,tdate)=? and ttype=? group by CONVERT(DATE,tdate)",(acc[0],today,ttype))
                 count=cur.fetchone()
                 trans_history="insert into trans_history values(?,?,?,?,?,?,?)"
+                
                 if ttype=='Credit':
                     check_amount=int(acc[1])+int(amount)
                     if count and count[0]>=3:
