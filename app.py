@@ -4,12 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from datetime import datetime
 
+#flaskrestx
 
-basedir=os.path.dirname(os.path.realpath(__file__))
 
 app=Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///'+os.path.join(basedir,'books.db')
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///books.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 app.config['SQLALCHEMY_ECHO']=True
 
@@ -25,10 +25,9 @@ class Book(db.Model):
     author=db.Column(db.String(40),nullable=False)
     date_added=db.Column(db.DateTime(),default=datetime.utcnow)
 
-
     def __repr__(self):
         return self.title
-
+ 
 
 book_model=api.model(
     'Book',
